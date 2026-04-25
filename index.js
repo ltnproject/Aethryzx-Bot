@@ -13,7 +13,6 @@ const client = new Client({
 
 client.commands = new Collection();
 
-// Load commands
 const commandFiles = fs.readdirSync('./commands').filter(f => f.endsWith('.js'));
 const commandsData = [];
 
@@ -23,10 +22,8 @@ for (const file of commandFiles) {
   commandsData.push(command.data.toJSON());
 }
 
-// Register slash commands on ready
 client.once('ready', async () => {
   console.log(`✅ Logged in as ${client.user.tag}`);
-
   const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
   try {
     await rest.put(
@@ -39,7 +36,6 @@ client.once('ready', async () => {
   }
 });
 
-// Handle interactions
 client.on('interactionCreate', async interaction => {
   if (interaction.isChatInputCommand()) {
     const command = client.commands.get(interaction.commandName);
@@ -52,7 +48,6 @@ client.on('interactionCreate', async interaction => {
       interaction.replied ? interaction.followUp(msg) : interaction.reply(msg);
     }
   }
-
   if (interaction.isButton()) {
     const { handleButton } = require('./utils/tournamentManager');
     await handleButton(interaction, client);
