@@ -38,8 +38,7 @@ module.exports = {
     // /tournament start
     .addSubcommand(sub =>
       sub.setName('start')
-        .setDescription('Lock registrations and start the bracket')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild))
+        .setDescription('Lock registrations and start the bracket'))
 
     // /tournament status
     .addSubcommand(sub =>
@@ -49,8 +48,7 @@ module.exports = {
     // /tournament cancel
     .addSubcommand(sub =>
       sub.setName('cancel')
-        .setDescription('Cancel the current tournament')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild))
+        .setDescription('Cancel the current tournament'))
 
     // /tournament invite
     .addSubcommand(sub =>
@@ -160,6 +158,9 @@ module.exports = {
 
     // ── START ─────────────────────────────────────────────────
     if (sub === 'start') {
+      if (!interaction.member.permissions.has(PermissionFlagsBits.ManageGuild)) {
+        return interaction.reply({ content: '❌ You need Manage Server permission.', ephemeral: true });
+      }
       const t = getTournament(interaction.guildId);
       if (!t) return interaction.reply({ content: '❌ No active tournament.', ephemeral: true });
       if (t.status !== 'open') return interaction.reply({ content: '⚠️ Tournament already started.', ephemeral: true });
@@ -172,7 +173,6 @@ module.exports = {
       const embed = buildBracketEmbed(t, 1);
       await interaction.reply({ content: `🚀 **${t.name}** has started! Good luck everyone!`, embeds: [embed] });
 
-      // Post match buttons
       for (const match of t.matches.filter(m => m.round === 1)) {
         if (!match.player2) {
           match.winner = match.player1;
@@ -190,6 +190,9 @@ module.exports = {
 
     // ── CANCEL ────────────────────────────────────────────────
     if (sub === 'cancel') {
+      if (!interaction.member.permissions.has(PermissionFlagsBits.ManageGuild)) {
+        return interaction.reply({ content: '❌ You need Manage Server permission.', ephemeral: true });
+      }
       const t = getTournament(interaction.guildId);
       if (!t) return interaction.reply({ content: '❌ No active tournament.', ephemeral: true });
       deleteTournament(interaction.guildId);
@@ -199,11 +202,9 @@ module.exports = {
     // ── INVITE ────────────────────────────────────────────────
     if (sub === 'invite') {
       const opponent = interaction.options.getUser('opponent');
-      const t = getTournament(interaction.guildId);
 
-      // Create a temporary invite to the current channel
       const invite = await interaction.channel.createInvite({
-        maxAge: 3600,  // 1 hour
+        maxAge: 3600,
         maxUses: 2,
         reason: `Tournament match invite: ${interaction.user.tag} vs ${opponent.tag}`,
       });
@@ -219,7 +220,6 @@ module.exports = {
         .setFooter({ text: 'Aethryzx Rivals Clan' })
         .setTimestamp();
 
-      // DM the opponent
       try {
         await opponent.send({ embeds: [embed] });
         return interaction.reply({ content: `✅ Invite sent to <@${opponent.id}> via DM!`, ephemeral: true });
