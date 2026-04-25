@@ -2,29 +2,34 @@ import { Client, GatewayIntentBits } from "discord.js";
 import dotenv from "dotenv";
 import express from "express";
 
+console.log("BOOT: starting bot...");
+
 dotenv.config();
 
-// 🌐 Keep-alive server (Render needs this)
+console.log("BOOT: env loaded");
+console.log("TOKEN exists?", !!process.env.TOKEN);
+
+// 🌐 web server (Render requirement)
 const app = express();
 
 app.get("/", (req, res) => {
-  res.send("Bot is alive");
+  res.send("Bot alive");
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Web server running on port ${PORT}`);
+  console.log("WEB: listening on", PORT);
 });
 
-// 🤖 Discord bot
+// 🤖 bot
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
 });
 
 client.once("ready", () => {
-  console.log(`Logged in as ${client.user.tag}`);
+  console.log("BOT: logged in as", client.user.tag);
 });
 
-client.login(process.env.TOKEN).catch(err => {
-  console.error("Login failed:", err);
-});
+client.login(process.env.TOKEN)
+  .then(() => console.log("LOGIN: success"))
+  .catch(err => console.error("LOGIN ERROR:", err));
