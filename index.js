@@ -17,13 +17,13 @@ const commandFiles = fs.readdirSync('./commands').filter(f => f.endsWith('.js'))
 const commandsData = [];
 
 for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
+  const command = require('./commands/' + file);
   client.commands.set(command.data.name, command);
   commandsData.push(command.data.toJSON());
 }
 
 client.once('ready', async () => {
-  console.log(`✅ Logged in as ${client.user.tag}`);
+  console.log('✅ Logged in as ' + client.user.tag);
   const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
   try {
     await rest.put(
