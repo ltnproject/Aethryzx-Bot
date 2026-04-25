@@ -1,20 +1,17 @@
 {
-  "name": "aethryzx-rivals-bot",
+  "name": "aethryzx-invite-bot",
   "version": "1.0.0",
-  "description": "Tournament bot for Aethryzx Rivals Clan",
+  "description": "Invite bot for Aethryzx Rivals Clan",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5"
   },
-  "devDependencies": {
-    "nodemon": "^3.1.0"
-  },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "18.x"
   }
 }
