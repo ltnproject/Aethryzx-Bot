@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aethryzx Rivals — Clan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Barlow:wght@300;400;500&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #e63946;
+    --red-dim: #9b1c26;
+    --red-glow: rgba(230,57,70,0.18);
+    --gold: #f4a30a;
+    --dark: #0a0a0c;
+    --dark2: #111116;
+    --dark3: #17171e;
+    --text: #e8e6e0;
+    --muted: #6e6c66;
+    --border: rgba(255,255,255,0.06);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 32px; height: 32px;
+    border: 1px solid rgba(230,57,70,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 500;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    background: linear-gradient(to bottom, rgba(10,10,12,0.95), transparent);
+    backdrop-filter: blur(8px);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none;
+  }
+  .nav-logo img {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  .nav-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px; font-weight: 700;
+    color: var(--text);
+    letter-spacing: 2px;
+  }
+  .nav-join {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--dark);
+    background: var(--red);
+    padding: 8px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .nav-join:hover { background: #ff4d5a; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 120px 24px 60px;
+  }
+
+  /* Animated grid lines */
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(230,57,70,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(230,57,70,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 70%);
+    animation: gridPan 20s linear infinite;
+  }
+  @keyframes gridPan { from { background-position: 0 0; } to { background-position: 60px 60px; } }
+
+  /* Radial glow */
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(230,57,70,0.12) 0%, transparent 65%);
+    top: 50%; left: 50%; transform: translate(-50%, -55%);
+    pointer-events: none;
+    animation: breathe 4s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%,100% { opacity: 0.7; transform: translate(-50%,-55%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%,-55%) scale(1.08); }
+  }
+
+  .hero-logo {
+    width: 100px; height: 100px;
+    border-radius: 20px;
+    border: 1px solid rgba(230,57,70,0.3);
+    object-fit: cover;
+    margin-bottom: 32px;
+    position: relative; z-index: 2;
+    box-shadow: 0 0 40px rgba(230,57,70,0.2), 0 0 80px rgba(230,57,70,0.08);
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+    position: relative; z-index: 2;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(42px, 8vw, 88px);
+    font-weight: 900;
+    line-height: 0.95;
+    text-align: center;
+    position: relative; z-index: 2;
+    animation: fadeUp 0.8s 0.2s ease both;
+    letter-spacing: -1px;
+  }
+  .hero-title .accent { color: var(--red); }
+
+  .hero-sub {
+    font-size: 16px; font-weight: 300;
+    color: var(--muted);
+    margin-top: 20px;
+    letter-spacing: 1px;
+    text-align: center;
+    position: relative; z-index: 2;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .hero-cta {
+    display: flex; gap: 12px;
+    margin-top: 40px;
+    position: relative; z-index: 2;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+  .btn-primary {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    background: var(--red);
+    color: #fff;
+    padding: 14px 36px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  .btn-primary:hover { background: transparent; border-color: var(--red); color: var(--red); }
+
+  .btn-secondary {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    background: transparent;
+    color: var(--muted);
+    padding: 14px 36px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute; bottom: 32px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--muted); font-size: 11px; letter-spacing: 2px;
+    z-index: 2;
+    animation: fadeUp 1s 0.8s ease both;
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--red), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── VIDEO SECTION ── */
+  .section {
+    padding: 100px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 40px;
+  }
+
+  .video-wrap {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 60px rgba(230,57,70,0.08);
+  }
+  .video-wrap iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: none;
+  }
+  .video-corner {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: var(--red);
+    border-style: solid;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .video-corner.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .video-corner.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+  .video-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+  .video-corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+  /* ── FEATURES ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 48px;
+  }
+  .feature-card {
+    background: var(--dark2);
+    padding: 32px;
+    transition: background 0.2s;
+  }
+  .feature-card:hover { background: var(--dark3); }
+  .feature-icon {
+    width: 40px; height: 40px;
+    background: var(--red-glow);
+    border: 1px solid rgba(230,57,70,0.2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+  .feature-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px; font-weight: 700; letter-spacing: 1px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .feature-desc {
+    font-size: 14px; line-height: 1.6;
+    color: var(--muted);
+  }
+
+  /* ── JOIN SECTION ── */
+  .join-section {
+    padding: 120px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .join-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(230,57,70,0.07), transparent);
+    pointer-events: none;
+  }
+  .join-section .section-title { margin-bottom: 16px; }
+  .join-desc {
+    font-size: 16px; color: var(--muted);
+    max-width: 480px; margin: 0 auto 40px;
+    line-height: 1.7;
+  }
+  .discord-btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    background: #5865F2;
+    color: #fff;
+    padding: 16px 44px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  .discord-btn:hover { background: transparent; border-color: #5865F2; color: #5865F2; }
+  .discord-btn svg { width: 22px; height: 22px; fill: currentColor; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .footer-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px; letter-spacing: 2px;
+    color: var(--muted);
+  }
+  .footer-copy { font-size: 12px; color: var(--muted); }
+
+  /* ── DIVIDER LINE ── */
+  .slash-divider {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 24px;
+  }
+  .slash-divider::before, .slash-divider::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: var(--border);
+  }
+  .slash-divider span {
+    color: var(--red);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px; letter-spacing: 3px;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .section { padding: 60px 20px; }
+    .hero-cta { flex-direction: column; align-items: center; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <img src="https://drk.qzz.io/Aethryzx-Bot/9FA864F1-AD0B-472B-868C-666B03051A09.png" alt="Aethryzx Logo">
+    <span class="nav-name">AETHRYZX</span>
+  </a>
+  <a class="nav-join" href="https://dsc.gg/aethryzx" target="_blank">Join Clan</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <img class="hero-logo" src="https://drk.qzz.io/Aethryzx-Bot/9FA864F1-AD0B-472B-868C-666B03051A09.png" alt="Aethryzx">
+
+  <div class="hero-eyebrow">Rivals Clan — Est. 2024</div>
+
+  <h1 class="hero-title">
+    AETHRYZX<br>
+    <span class="accent">RIVALS</span>
+  </h1>
+
+  <p class="hero-sub">Compete. Dominate. Reign.</p>
+
+  <div class="hero-cta">
+    <a class="btn-primary" href="https://dsc.gg/aethryzx" target="_blank">Join the Clan</a>
+    <a class="btn-secondary" href="#video">Watch Highlights</a>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section class="section" id="video">
+  <div class="slash-divider"><span>// HIGHLIGHTS</span></div>
+  <div class="section-label">Clan Showcase</div>
+  <h2 class="section-title">See Us In Action</h2>
+
+  <div class="video-wrap">
+    <div class="video-corner tl"></div>
+    <div class="video-corner tr"></div>
+    <div class="video-corner bl"></div>
+    <div class="video-corner br"></div>
+    <iframe
+      src="https://www.youtube.com/embed/iw3uZA06K8E?si=T-jGi75UXkoMva2_"
+      title="Aethryzx Rivals Clan"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="about">
+  <div class="slash-divider"><span>// WHY JOIN</span></div>
+  <div class="section-label">Clan Benefits</div>
+  <h2 class="section-title">Built for Competitors</h2>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚔️</div>
+      <div class="feature-title">Clan Tournaments</div>
+      <div class="feature-desc">Auto-generated brackets, live results, and champion announcements powered by our custom Discord bot.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏆</div>
+      <div class="feature-title">Ranked Matches</div>
+      <div class="feature-desc">Compete in organized 1v1 and team matches with skill-based matchmaking within the clan.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <div class="feature-title">Active Community</div>
+      <div class="feature-desc">Connect with dedicated players, share strategies, and grow alongside a serious competitive squad.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👑</div>
+      <div class="feature-title">Champion Roles</div>
+      <div class="feature-desc">Win tournaments to earn exclusive Discord roles and recognition within the Aethryzx Rivals hierarchy.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📡</div>
+      <div class="feature-title">Clan Events</div>
+      <div class="feature-desc">Regular scrimmages, special events, and organized sessions to keep the competition alive.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <div class="feature-title">Private Matches</div>
+      <div class="feature-desc">Use our bot's private invite system to set up exclusive 1v1 matches with direct Discord links.</div>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN -->
+<section class="join-section">
+  <div class="slash-divider"><span>// ENLIST</span></div>
+  <div class="section-label">Ready to Compete?</div>
+  <h2 class="section-title">Join Aethryzx Rivals</h2>
+  <p class="join-desc">Step into the arena. Our Discord server is where the action happens — tournaments, matches, and a community built around winning.</p>
+
+  <a class="discord-btn" href="https://dsc.gg/aethryzx" target="_blank">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.013.043.03.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
+    </svg>
+    Join on Discord
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">AETHRYZX RIVALS</div>
+  <div class="footer-copy">© 2024 Aethryzx Rivals Clan · <a href="https://dsc.gg/aethryzx" style="color:var(--red);text-decoration:none">dsc.gg/aethryzx</a></div>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    cursor.style.left = mx - 4 + 'px';
+    cursor.style.top = my - 4 + 'px';
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx - 16 + 'px';
+    ring.style.top = ry - 16 + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2.5)'; ring.style.borderColor = 'rgba(230,57,70,0.9)'; });
+    el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.borderColor = 'rgba(230,57,70,0.5)'; });
+  });
+
+  // Scroll-reveal
+  const revealEls = document.querySelectorAll('.feature-card, .video-wrap');
+  revealEls.forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'opacity 0.6s ease, transform 0.6s ease'; });
+  const revObs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }, 80 * i);
+        revObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => revObs.observe(el));
+</script>
+</body>
+</html>
