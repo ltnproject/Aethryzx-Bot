@@ -54,7 +54,9 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(process.env.DISCORD_TOKEN)
+  .then(() => console.log('✅ Login successful'))
+  .catch(err => console.error('❌ Login failed:', err.message));
 
 const http = require('http');
 http.createServer((req, res) => res.end('alive')).listen(10000);
