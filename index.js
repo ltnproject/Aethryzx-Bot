@@ -62,4 +62,4 @@ client.on('interactionCreate', async interaction => {
 client.login(process.env.DISCORD_TOKEN);
 
 const http = require('http');
-http.createServer((req, res) => res.end('alive')).listen(process.env.PORT || 3000);
+http.createServer((req, res) => res.end('alive')).listen(10000);
